@@ -1,20 +1,33 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAccount, useChainId, usePublicClient } from "wagmi";
-import { zeroAddress, type Address } from "viem";
-import { xphereTestnet } from "@/config/chains";
-import { testnetDeployment } from "@/config/contracts";
-import { xphereIdAbi } from "@/config/abis";
+import {
+  useAccount,
+  useChainId,
+  usePublicClient,
+  useReadContract,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from "wagmi";
+import { zeroAddress, type Address, type Hash } from "viem";
+import { activeChain, activeDeployment } from "@/config/active";
+import {
+  publicResolverAbi,
+  xpRegistrarAbi,
+  xphereIdAbi,
+} from "@/config/abis";
 import { fetchOwnedRegistrationLabels } from "@/lib/fetchNameLogs";
+import { formatTxError } from "@/lib/label";
+import { ensureActiveXphereChain } from "@/lib/network";
 import { myNamesQueryKey } from "@/lib/queryKeys";
 import styles from "./MyNames.module.css";
 
-const registrar = testnetDeployment.contracts.XpRegistrar as Address;
-const xphereId = testnetDeployment.contracts.XphereID as Address;
-const explorer = testnetDeployment.explorer;
-const deployBlock = BigInt(testnetDeployment.deployBlock);
+const registrar = activeDeployment.contracts.XpRegistrar as Address;
+const resolver = activeDeployment.contracts.PublicResolver as Address;
+const xphereId = activeDeployment.contracts.XphereID as Address;
+const explorer = activeDeployment.explorer;
+const deployBlock = BigInt(activeDeployment.deployBlock);
 
 export type OwnedName = {
   label: string;
@@ -28,8 +41,8 @@ function shortAddress(address: string) {
 export function MyNames() {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
-  const publicClient = usePublicClient({ chainId: xphereTestnet.id });
-  const onCorrectNetwork = isConnected && chainId === xphereTestnet.id;
+  const publicClient = usePublicClient({ chainId: activeChain.id });
+  const onCorrectNetwork = isConnected && chainId === activeChain.id;
   const queryClient = useQueryClient();
 
   const {
@@ -101,7 +114,7 @@ export function MyNames() {
         <div className={styles.head}>
           <h2 className={styles.heading}>My Names</h2>
         </div>
-        <p className={styles.empty}>Switch to Xphere Testnet to load names.</p>
+        <p className={styles.empty}>Switch to {activeChain.name} to load names.</p>
       </section>
     );
   }
@@ -131,7 +144,12 @@ export function MyNames() {
       ) : (
         <ul className={styles.list}>
           {names.map((item) => (
-            <NameRow key={item.label} item={item} />
+            <NameRow
+              key={item.label}
+              item={item}
+              wallet={address}
+              onUpdated={refresh}
+            />
           ))}
         </ul>
       )}
@@ -139,10 +157,44 @@ export function MyNames() {
   );
 }
 
-function NameRow({ item }: { item: OwnedName }) {
+function NameRow({
+  item,
+  wallet,
+  onUpdated,
+}: {
+  item: OwnedName;
+  wallet: Address | undefined;
+  onUpdated: () => void;
+}) {
   const [copied, setCopied] = useState(false);
+  const [rowError, setRowError] = useState<string | null>(null);
   const fullName = `${item.label}.xp`;
   const resolved = item.resolved;
+  const needsSet = !resolved;
+
+  const { data: nameNode } = useReadContract({
+    address: registrar,
+    abi: xpRegistrarAbi,
+    functionName: "namehashOf",
+    args: [item.label],
+    query: { enabled: needsSet },
+  });
+
+  const {
+    writeContract,
+    data: txHash,
+    isPending,
+    reset,
+  } = useWriteContract();
+
+  const setAddrTx = useWaitForTransactionReceipt({ hash: txHash });
+
+  useEffect(() => {
+    if (setAddrTx.isSuccess) {
+      setRowError(null);
+      onUpdated();
+    }
+  }, [setAddrTx.isSuccess, onUpdated]);
 
   async function onCopy() {
     if (!resolved) return;
@@ -155,6 +207,41 @@ function NameRow({ item }: { item: OwnedName }) {
     }
   }
 
+  async function onSetAddr() {
+    setRowError(null);
+    reset();
+
+    if (!wallet) {
+      setRowError("Connect your wallet first.");
+      return;
+    }
+    if (!nameNode) {
+      setRowError("Could not compute namehash.");
+      return;
+    }
+
+    try {
+      await ensureActiveXphereChain();
+    } catch (err) {
+      setRowError(formatTxError(err));
+      return;
+    }
+
+    writeContract(
+      {
+        address: resolver,
+        abi: publicResolverAbi,
+        functionName: "setAddr",
+        args: [nameNode, wallet],
+      },
+      {
+        onError: (err) => setRowError(formatTxError(err)),
+      }
+    );
+  }
+
+  const busy = isPending || setAddrTx.isLoading;
+
   return (
     <li className={styles.row}>
       <div className={styles.rowMain}>
@@ -162,9 +249,20 @@ function NameRow({ item }: { item: OwnedName }) {
         <span className={styles.addr}>
           {resolved ? shortAddress(resolved) : "No address set"}
         </span>
+        {rowError ? <p className={styles.rowError}>{rowError}</p> : null}
+        {txHash ? <TxLink hash={txHash} /> : null}
       </div>
       <div className={styles.actions}>
-        {resolved ? (
+        {needsSet ? (
+          <button
+            type="button"
+            className={styles.setBtn}
+            disabled={busy || !wallet}
+            onClick={() => void onSetAddr()}
+          >
+            {busy ? "Confirm in wallet…" : "Set address to my wallet"}
+          </button>
+        ) : (
           <>
             <button type="button" className={styles.action} onClick={onCopy}>
               {copied ? "Copied" : "Copy"}
@@ -178,8 +276,21 @@ function NameRow({ item }: { item: OwnedName }) {
               Explorer
             </a>
           </>
-        ) : null}
+        )}
       </div>
     </li>
+  );
+}
+
+function TxLink({ hash }: { hash: Hash }) {
+  return (
+    <a
+      className={styles.tx}
+      href={`${explorer}/tx/${hash}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      setAddr tx {hash.slice(0, 10)}…
+    </a>
   );
 }

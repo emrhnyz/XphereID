@@ -1,14 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import {
-  useAccount,
-  useConnect,
-  useDisconnect,
-  useChainId,
-} from "wagmi";
-import { xphereTestnet } from "@/config/chains";
-import { ensureXphereTestnet } from "@/lib/network";
+import { useAccount, useConnect, useDisconnect, useChainId } from "wagmi";
+import { activeChain } from "@/config/active";
+import { ensureActiveXphereChain } from "@/lib/network";
 import { formatTxError } from "@/lib/label";
 import styles from "./ConnectWallet.module.css";
 
@@ -24,14 +19,14 @@ export function ConnectWallet() {
   const [switching, setSwitching] = useState(false);
   const [switchError, setSwitchError] = useState<string | null>(null);
 
-  const onWrongNetwork = isConnected && chainId !== xphereTestnet.id;
+  const onWrongNetwork = isConnected && chainId !== activeChain.id;
   const connector = connectors[0];
 
   async function onSwitch() {
     setSwitchError(null);
     setSwitching(true);
     try {
-      await ensureXphereTestnet();
+      await ensureActiveXphereChain();
     } catch (err) {
       setSwitchError(formatTxError(err));
     } finally {
@@ -43,7 +38,7 @@ export function ConnectWallet() {
     if (!connector) return;
     connect({
       connector,
-      chainId: xphereTestnet.id,
+      chainId: activeChain.id,
     });
   }
 
@@ -57,11 +52,11 @@ export function ConnectWallet() {
             disabled={switching}
             onClick={() => void onSwitch()}
           >
-            {switching ? "Switching…" : "Switch to Xphere Testnet"}
+            {switching ? "Switching…" : `Switch to ${activeChain.name}`}
           </button>
         ) : (
           <p className={styles.network}>
-            Xphere Testnet · {shortAddress(address)}
+            {activeChain.name} · {shortAddress(address)}
           </p>
         )}
         <button

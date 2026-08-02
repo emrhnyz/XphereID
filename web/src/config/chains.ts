@@ -22,3 +22,26 @@ export const xphereTestnet = defineChain({
   },
   testnet: true,
 });
+
+/** Xphere Mainnet — see root NETWORKS.md */
+export const xphereMainnet = defineChain({
+  id: 20250217,
+  name: "Xphere Mainnet",
+  nativeCurrency: {
+    name: "Xphere",
+    symbol: "XP",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://en-hkg.x-phere.com"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Tamsa",
+      url: "https://xp.tamsa.io",
+    },
+  },
+  testnet: false,
+});

@@ -1,0 +1,24 @@
+{
+  "network": "Xphere Mainnet",
+  "chainId": 20250217,
+  "rpc": "https://en-hkg.x-phere.com",
+  "explorer": "https://xp.tamsa.io",
+  "deployer": "0x3B0E04cE7b3051024eeC8d5343F24c54077Ec3e2",
+  "treasury": "0x3B0E04cE7b3051024eeC8d5343F24c54077Ec3e2",
+  "registerPriceWei": "10000000000000000",
+  "registerPriceXp": "0.01",
+  "tld": ".xp",
+  "baseNode": "0xca6be387bd1d023a035f36cf21918265350763acfd55558bcbdf3a9035066b8d",
+  "deployBlock": 44946370,
+  "contracts": {
+    "ENSRegistry": "0x2C39B3873d45257C27dFa777d5BaC39589FCE546",
+    "PublicResolver": "0x5b57952AF68e8608D667777ce51726d4d1014A6F",
+    "XpRegistrar": "0x8B9B94ca30dE5147cb57D4B7afE5B0b9A9E2dBbD",
+    "XphereID": "0x070C0BFd807D11d8ccfD25F2052273098F5c102F"
+  },
+  "transactions": {
+    "setXpOwner": "0xe92de77edc7053ff8ad5aaa2d93ad3129434496e9f37470729f6bf406b77b509"
+  },
+  "deployedAt": "2026-08-02T20:06:58.170Z",
+  "feeNote": "Intentionally low registration fee for grant demo / public good."
+}

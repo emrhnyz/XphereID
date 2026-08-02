@@ -1,11 +1,11 @@
 import { ConnectWallet } from "@/components/ConnectWallet";
 import { MyNames } from "@/components/MyNames";
 import { NameFlow } from "@/components/NameFlow";
-import { testnetDeployment } from "@/config/contracts";
+import { activeChain, activeDeployment, appNetwork } from "@/config/active";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const { chainId, registerPriceXpt } = testnetDeployment;
+  const { chainId, registerPriceNative, nativeSymbol } = activeDeployment;
 
   return (
     <div className={styles.page}>
@@ -19,11 +19,14 @@ export default function Home() {
         <h1 className={styles.title}>XphereID</h1>
         <p className={styles.lead}>
           Search a <strong>.xp</strong> name, register it, then set and resolve
-          an address on Xphere Testnet.
+          an address on {activeChain.name}.
         </p>
         <p className={styles.hint}>
-          Network chainId <code>{chainId}</code> · fee{" "}
-          <code>{registerPriceXpt} XPT</code> + gas
+          Mode <code>{appNetwork}</code> · chainId <code>{chainId}</code> · fee{" "}
+          <code>
+            {registerPriceNative} {nativeSymbol}
+          </code>{" "}
+          + gas
         </p>
 
         <NameFlow />
@@ -31,7 +34,7 @@ export default function Home() {
       </main>
 
       <footer className={styles.footer}>
-        Grant demo · register · setAddr · resolve · my names
+        Grant demo · low fee · register · setAddr · resolve · my names
       </footer>
     </div>
   );

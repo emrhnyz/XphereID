@@ -108,6 +108,40 @@
   color: var(--accent-strong);
 }
 
+.setBtn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+}
+
+.setBtn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.setBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.rowError {
+  margin: 0.15rem 0 0;
+  color: var(--danger);
+  font-size: 0.8rem;
+}
+
+.tx {
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  color: var(--accent);
+  word-break: break-all;
+}
+
 @media (min-width: 560px) {
   .row {
     flex-direction: row;

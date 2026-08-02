@@ -10,27 +10,26 @@ import {
   useWriteContract,
 } from "wagmi";
 import { zeroAddress, type Hash } from "viem";
-import { xphereTestnet } from "@/config/chains";
-import { testnetDeployment } from "@/config/contracts";
+import { activeChain, activeDeployment } from "@/config/active";
 import {
   publicResolverAbi,
   xpRegistrarAbi,
   xphereIdAbi,
 } from "@/config/abis";
 import { formatTxError, isValidLabel, normalizeLabel } from "@/lib/label";
-import { ensureXphereTestnet } from "@/lib/network";
+import { ensureActiveXphereChain } from "@/lib/network";
 import { myNamesQueryKey } from "@/lib/queryKeys";
 import styles from "./NameFlow.module.css";
 
-const registrar = testnetDeployment.contracts.XpRegistrar as `0x${string}`;
-const resolver = testnetDeployment.contracts.PublicResolver as `0x${string}`;
-const xphereId = testnetDeployment.contracts.XphereID as `0x${string}`;
-const priceWei = BigInt(testnetDeployment.registerPriceWei);
+const registrar = activeDeployment.contracts.XpRegistrar as `0x${string}`;
+const resolver = activeDeployment.contracts.PublicResolver as `0x${string}`;
+const xphereId = activeDeployment.contracts.XphereID as `0x${string}`;
+const priceWei = BigInt(activeDeployment.registerPriceWei);
 
 export function NameFlow() {
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
-  const onCorrectNetwork = isConnected && chainId === xphereTestnet.id;
+  const onCorrectNetwork = isConnected && chainId === activeChain.id;
 
   const [rawLabel, setRawLabel] = useState("");
   const [resolveRaw, setResolveRaw] = useState("");
@@ -83,6 +82,16 @@ export function NameFlow() {
     },
   });
 
+  const { data: labelResolved, refetch: refetchLabelResolved } = useReadContract({
+    address: xphereId,
+    abi: xphereIdAbi,
+    functionName: "resolve",
+    args: [label],
+    query: {
+      enabled: onCorrectNetwork && labelOk,
+    },
+  });
+
   const {
     writeContract: writeRegister,
     data: registerHash,
@@ -122,6 +131,7 @@ export function NameFlow() {
       setActionError(null);
       void refetchAvailable();
       void refetchOwner();
+      void refetchLabelResolved();
       void queryClient.invalidateQueries({ queryKey: myNamesQueryKey(address) });
     }
   }, [
@@ -129,6 +139,7 @@ export function NameFlow() {
     label,
     refetchAvailable,
     refetchOwner,
+    refetchLabelResolved,
     queryClient,
     address,
   ]);
@@ -137,6 +148,8 @@ export function NameFlow() {
     if (setAddrTx.isSuccess) {
       setSuccessNote(`Address set for ${label}.xp`);
       setActionError(null);
+      setJustRegistered(false);
+      void refetchLabelResolved();
       if (resolveLabel === label) {
         void refetchResolve();
       }
@@ -147,6 +160,7 @@ export function NameFlow() {
     label,
     resolveLabel,
     refetchResolve,
+    refetchLabelResolved,
     queryClient,
     address,
   ]);
@@ -155,13 +169,24 @@ export function NameFlow() {
     !!address &&
     !!nameOwner &&
     nameOwner.toLowerCase() === address.toLowerCase();
+
+  const alreadySetToWallet =
+    !!address &&
+    !!labelResolved &&
+    labelResolved !== zeroAddress &&
+    labelResolved.toLowerCase() === address.toLowerCase();
+
+  // Offer setAddr only if we own the name and it is not already our address.
   const canSetAddr =
-    onCorrectNetwork && labelOk && (justRegistered || isOwner);
+    onCorrectNetwork &&
+    labelOk &&
+    (justRegistered || isOwner) &&
+    !alreadySetToWallet;
 
   async function onSwitchNetwork() {
     setActionError(null);
     try {
-      await ensureXphereTestnet();
+      await ensureActiveXphereChain();
     } catch (err) {
       setActionError(formatTxError(err));
     }
@@ -186,7 +211,7 @@ export function NameFlow() {
     }
 
     try {
-      await ensureXphereTestnet();
+      await ensureActiveXphereChain();
     } catch (err) {
       setActionError(formatTxError(err));
       return;
@@ -221,7 +246,7 @@ export function NameFlow() {
     }
 
     try {
-      await ensureXphereTestnet();
+      await ensureActiveXphereChain();
     } catch (err) {
       setActionError(formatTxError(err));
       return;
@@ -253,7 +278,7 @@ export function NameFlow() {
   const statusText = (() => {
     if (!label) return "Type a name to check availability.";
     if (!labelOk) return "Invalid — 3–32 chars, a–z / 0–9 / hyphen.";
-    if (!onCorrectNetwork) return "Connect on Xphere Testnet to check.";
+    if (!onCorrectNetwork) return `Connect on ${activeChain.name} to check.`;
     if (checkingAvailable) return "Checking…";
     if (availableError) return formatTxError(availableError);
     if (available === true) return "Available";
@@ -302,7 +327,7 @@ export function NameFlow() {
             className={styles.secondary}
             onClick={() => void onSwitchNetwork()}
           >
-            Switch to Xphere Testnet
+            Switch to {activeChain.name}
           </button>
         ) : null}
 
@@ -315,7 +340,7 @@ export function NameFlow() {
           >
             {registerPending || registerTx.isLoading
               ? "Confirm in wallet…"
-              : `Register · ${testnetDeployment.registerPriceXpt} XPT + gas`}
+              : `Register · ${activeDeployment.registerPriceNative} ${activeDeployment.nativeSymbol} + gas`}
           </button>
         ) : null}
 
@@ -380,7 +405,7 @@ export function NameFlow() {
 }
 
 function TxLink({ hash, label }: { hash: Hash; label: string }) {
-  const href = `${testnetDeployment.explorer}/tx/${hash}`;
+  const href = `${activeDeployment.explorer}/tx/${hash}`;
   return (
     <p className={styles.tx}>
       {label}:{" "}

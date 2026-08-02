@@ -39,7 +39,7 @@ export function formatTxError(err: unknown): string {
     lower.includes("does not match the target chain") ||
     lower.includes("current chain of the wallet")
   ) {
-    return "Wrong network. Click “Switch to Xphere Testnet” (MetaMask will offer to add it if missing).";
+    return "Wrong network. Click Switch to the active Xphere network (MetaMask will offer to add it if missing).";
   }
 
   if (lower.includes("taken")) {
