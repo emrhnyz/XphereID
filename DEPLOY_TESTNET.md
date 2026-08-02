@@ -76,7 +76,7 @@ Useful checks:
 
 ## Contract verification
 
-**Manuel.** Tamsa does not expose a documented Hardhat/Etherscan-style verify API for this flow. For the grant demo: keep `testnet.json` + this doc + repo source. If Tamsa/Sourcify verify UI appears later, verify there manually.
+**Manuel.** Tamsa does not expose a documented Hardhat/Etherscan-style verify API for this flow. For the product demo: keep `testnet.json` + this doc + repo source. If Tamsa/Sourcify verify UI appears later, verify there manually.
 
 ## Smoke register (optional)
 

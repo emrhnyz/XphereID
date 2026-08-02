@@ -2,7 +2,7 @@
 
 Deploy the **same contracts** as testnet to **Xphere Mainnet** (chainId `20250217`).
 
-Registration fee stays **low by default (`0.01` XP)** for the grant demo — not a high-fee cash grab.
+Registration fee stays **low by default (`0.01` XP)** for the product demo — not a high-fee cash grab.
 
 ## Deploy order
 
@@ -88,7 +88,7 @@ https://xp.tamsa.io — paste contract address or tx hash.
 
 ## Fee policy
 
-Keep `REGISTER_PRICE_WEI` low (default **0.01 XP**). Note this in grant materials as public-good infrastructure pricing. You can raise later via `XpRegistrar.setPrice` (owner).
+Keep `REGISTER_PRICE_WEI` low (default **0.01 XP**). Note this in docs as You can raise later via `XpRegistrar.setPrice` (owner).
 
 ## Smoke register (optional)
 

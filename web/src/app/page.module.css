@@ -1,77 +1,263 @@
 .page {
+  position: relative;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 1.25rem clamp(1rem, 4vw, 2.25rem) 2.25rem;
+  overflow-x: clip;
 }
 
-.top {
+.aurora {
+  pointer-events: none;
+  position: absolute;
+  inset: -10% 10% auto;
+  height: min(58vh, 520px);
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--accent) 22%, transparent),
+    transparent 72%
+  );
+  filter: blur(28px);
+  animation: softPulse 8s ease-in-out infinite;
+  z-index: 0;
+}
+
+.grid {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--text) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--text) 4%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 70% 50% at 50% 0%, #000 20%, transparent 75%);
+  opacity: 0.35;
+  z-index: 0;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: clamp(2.25rem, 8vh, 4.5rem);
+  padding: 0.9rem clamp(1rem, 4vw, 2.5rem);
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(16px);
 }
 
-.brandMark {
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
   font-family: var(--font-display), sans-serif;
   font-weight: 700;
-  font-size: 1.05rem;
-  letter-spacing: -0.02em;
+  font-size: 1.15rem;
+  letter-spacing: -0.03em;
+  color: var(--text);
 }
 
-.main {
-  width: 100%;
-  max-width: 40rem;
-  display: flex;
-  flex-direction: column;
+.brand:hover {
+  color: var(--text);
+}
+
+.brandLogo {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  border-radius: 0.35rem;
+}
+
+.navLinks {
+  display: none;
+  align-items: center;
   gap: 1.15rem;
 }
 
-.eyebrow {
+.navLinks a {
   color: var(--muted);
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.navLinks a:hover {
+  color: var(--text);
+}
+
+.soon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.soonChip {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--warn);
+  border: 1px solid color-mix(in srgb, var(--warn) 40%, transparent);
+  border-radius: 999px;
+  padding: 0.15rem 0.4rem;
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hero {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: clamp(2.8rem, 10vh, 5.8rem) clamp(1rem, 4vw, 2rem) 1.75rem;
+  text-align: center;
+  display: grid;
+  gap: 1.05rem;
+  justify-items: center;
+  animation: riseIn 0.7s ease both;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-.title {
+.heroBrand {
   font-family: var(--font-display), sans-serif;
-  font-size: clamp(2.2rem, 7vw, 3.25rem);
+  font-size: clamp(3rem, 9vw, 4.8rem);
   font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+  background: linear-gradient(180deg, #ffffff 10%, #c7ddd4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .lead {
   color: var(--muted);
-  font-size: 1.02rem;
+  font-size: clamp(1rem, 2.4vw, 1.18rem);
   line-height: 1.55;
-  max-width: 36ch;
+  max-width: 38ch;
+  animation: riseIn 0.75s ease 0.08s both;
 }
 
-.hint {
-  color: var(--muted);
-  font-size: 0.88rem;
-  line-height: 1.45;
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 0.35rem;
+  animation: riseIn 0.8s ease 0.14s both;
 }
 
-.hint code {
-  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
-  font-size: 0.85em;
+.ctaPrimary,
+.ctaGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.78rem 1.25rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.ctaPrimary {
+  background: var(--accent);
+  color: #04110c;
+}
+
+.ctaPrimary:hover {
+  background: var(--accent-strong);
+  color: #04110c;
+  transform: translateY(-1px);
+}
+
+.ctaGhost {
+  border: 1px solid var(--border-strong);
   color: var(--text);
+  background: color-mix(in srgb, var(--bg-elevated) 70%, transparent);
+}
+
+.ctaGhost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.45rem 0.7rem;
+  color: var(--muted);
+  font-size: 0.84rem;
+  margin-top: 0.35rem;
+}
+
+.metaRow code {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  color: var(--text);
+  font-size: 0.85em;
+}
+
+.dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--border-strong);
+}
+
+.main {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 2rem) 3.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  animation: riseIn 0.85s ease 0.18s both;
 }
 
 .footer {
+  position: relative;
+  z-index: 1;
   margin-top: auto;
-  padding-top: 2.75rem;
+  padding: 1.5rem clamp(1rem, 4vw, 2.5rem) 2rem;
+  border-top: 1px solid var(--border);
   color: var(--muted);
   font-size: 0.85rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
-@media (max-width: 520px) {
-  .top {
-    align-items: flex-start;
+.footerBrand {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 800px) {
+  .navLinks {
+    display: flex;
   }
 }

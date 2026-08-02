@@ -297,12 +297,15 @@ export function NameFlow() {
 
   return (
     <section className={styles.section} aria-label="Name search and resolve">
-      <div className={styles.block}>
-        <h2 className={styles.heading}>Search &amp; register</h2>
+      <div id="register" className={styles.panel}>
+        <div className={styles.panelHead}>
+          <h2 className={styles.heading}>Search &amp; register</h2>
+          <p className={styles.sub}>Find a .xp name and claim it on-chain.</p>
+        </div>
         <label className={styles.label} htmlFor="name-input">
           Name
         </label>
-        <div className={styles.inputRow}>
+        <div className={styles.searchShell}>
           <input
             id="name-input"
             className={styles.input}
@@ -313,7 +316,7 @@ export function NameFlow() {
               setActionError(null);
               setSuccessNote(null);
             }}
-            placeholder="alice"
+            placeholder="yourname"
             autoComplete="off"
             spellCheck={false}
           />
@@ -321,41 +324,43 @@ export function NameFlow() {
         </div>
         <p className={`${styles.status} ${statusTone}`}>{statusText}</p>
 
-        {isConnected && !onCorrectNetwork ? (
-          <button
-            type="button"
-            className={styles.secondary}
-            onClick={() => void onSwitchNetwork()}
-          >
-            Switch to {activeChain.name}
-          </button>
-        ) : null}
+        <div className={styles.actions}>
+          {isConnected && !onCorrectNetwork ? (
+            <button
+              type="button"
+              className={styles.secondary}
+              onClick={() => void onSwitchNetwork()}
+            >
+              Switch to {activeChain.name}
+            </button>
+          ) : null}
 
-        {available === true && onCorrectNetwork ? (
-          <button
-            type="button"
-            className={styles.primary}
-            disabled={busy}
-            onClick={() => void onRegister()}
-          >
-            {registerPending || registerTx.isLoading
-              ? "Confirm in wallet…"
-              : `Register · ${activeDeployment.registerPriceNative} ${activeDeployment.nativeSymbol} + gas`}
-          </button>
-        ) : null}
+          {available === true && onCorrectNetwork ? (
+            <button
+              type="button"
+              className={styles.primary}
+              disabled={busy}
+              onClick={() => void onRegister()}
+            >
+              {registerPending || registerTx.isLoading
+                ? "Confirm in wallet…"
+                : `Register · ${activeDeployment.registerPriceNative} ${activeDeployment.nativeSymbol} + gas`}
+            </button>
+          ) : null}
 
-        {canSetAddr ? (
-          <button
-            type="button"
-            className={styles.secondary}
-            disabled={busy || !address}
-            onClick={() => void onSetAddr()}
-          >
-            {setAddrPending || setAddrTx.isLoading
-              ? "Confirm in wallet…"
-              : "Set address to my wallet"}
-          </button>
-        ) : null}
+          {canSetAddr ? (
+            <button
+              type="button"
+              className={styles.secondary}
+              disabled={busy || !address}
+              onClick={() => void onSetAddr()}
+            >
+              {setAddrPending || setAddrTx.isLoading
+                ? "Confirm in wallet…"
+                : "Set address to my wallet"}
+            </button>
+          ) : null}
+        </div>
 
         {registerHash ? (
           <TxLink hash={registerHash} label="Register tx" />
@@ -363,19 +368,22 @@ export function NameFlow() {
         {setAddrHash ? <TxLink hash={setAddrHash} label="SetAddr tx" /> : null}
       </div>
 
-      <div className={styles.block}>
-        <h2 className={styles.heading}>Resolve</h2>
+      <div id="resolve" className={styles.panel}>
+        <div className={styles.panelHead}>
+          <h2 className={styles.heading}>Resolve</h2>
+          <p className={styles.sub}>Look up which address a name points to.</p>
+        </div>
         <form onSubmit={onResolveSubmit} className={styles.resolveForm}>
           <label className={styles.label} htmlFor="resolve-input">
             Name
           </label>
-          <div className={styles.inputRow}>
+          <div className={styles.searchShell}>
             <input
               id="resolve-input"
               className={styles.input}
               value={resolveRaw}
               onChange={(e) => setResolveRaw(e.target.value)}
-              placeholder="alice"
+              placeholder="yourname"
               autoComplete="off"
               spellCheck={false}
             />

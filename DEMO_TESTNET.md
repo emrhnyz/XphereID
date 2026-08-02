@@ -33,7 +33,7 @@ Do this once with a **fresh unused label** (3–32 chars, `a-z` / `0–9` / hyph
 9. Open **My Names** → **Refresh** if needed → the name should list with address, **Copy**, and **Explorer**.
 10. On Tamsa, open each TX hash (from the UI links or MetaMask activity) and confirm success.
 
-Repeat with **2–3 different names** if you want richer grant evidence.
+Repeat with **2–3 different names** if you want richer demo evidence.
 
 ---
 

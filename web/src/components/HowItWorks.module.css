@@ -1,0 +1,194 @@
+.how,
+.why {
+  scroll-margin-top: 5rem;
+  width: 100%;
+  display: grid;
+  gap: 1.35rem;
+}
+
+.intro {
+  display: grid;
+  gap: 0.55rem;
+  text-align: center;
+  justify-items: center;
+}
+
+.kicker {
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.45rem, 3.5vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  max-width: 18ch;
+}
+
+.sub {
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.55;
+  max-width: 42ch;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.step {
+  position: relative;
+  display: grid;
+  gap: 0.4rem;
+  padding: 1.15rem 1.15rem 1.2rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--accent) 6%, #121c23), var(--bg-elevated));
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.step:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+  transform: translateY(-2px);
+}
+
+.stepNum {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.stepTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.stepBody {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.flow {
+  margin-top: 0.25rem;
+  padding: 1rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #070b0e;
+  overflow-x: auto;
+}
+
+.flowTrack {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-width: max-content;
+  margin: 0 auto;
+}
+
+.chip,
+.chipMuted,
+.chipAccent {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: -0.02em;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  white-space: nowrap;
+}
+
+.chip {
+  color: var(--text);
+  background: #10181e;
+}
+
+.chipMuted {
+  color: var(--muted);
+  background: transparent;
+}
+
+.chipAccent {
+  color: #04110c;
+  background: var(--accent);
+  border-color: transparent;
+}
+
+.arrow {
+  width: 1.4rem;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-strong), var(--accent));
+  position: relative;
+  flex-shrink: 0;
+}
+
+.arrow::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid var(--accent);
+  border-top: 1.5px solid var(--accent);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.pillars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.pillar {
+  padding: 1.2rem 1.15rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, #121c23 0%, var(--bg-elevated) 100%);
+}
+
+.pillarTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.4rem;
+}
+
+.pillarBody {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+@media (min-width: 720px) {
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pillars {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .title {
+    max-width: 22ch;
+  }
+}

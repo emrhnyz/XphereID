@@ -1,12 +1,12 @@
 # XphereID
 
-Human-readable **`.xp` names** on [Xphere](https://x-phere.com/) — a grant-oriented name service demo.
+Human-readable **`.xp` names** on [Xphere](https://x-phere.com/).
 
-`alice.xp` → `0x…` on-chain. Non-custodial identity infrastructure for the Xphere ecosystem.
+`alice.xp` → `0x…` on-chain. Non-custodial name service for the Xphere ecosystem.
 
-## Fee policy
+## Fee
 
-Registration fee is kept **intentionally low** (default **0.01** XPT on testnet / **0.01** XP on mainnet) for the grant demo and public-good positioning. Override with `REGISTER_PRICE_WEI` at deploy time; owner can later call `setPrice`.
+Default registration fee is **0.01** XPT (testnet) / **0.01** XP (mainnet). Override with `REGISTER_PRICE_WEI` at deploy; owner can call `setPrice` later.
 
 ## Repo layout
 
@@ -17,21 +17,19 @@ Registration fee is kept **intentionally low** (default **0.01** XPT on testnet 
 ├── NETWORKS.md
 ├── DEPLOY_TESTNET.md
 ├── DEPLOY_MAINNET.md
-├── DEMO_TESTNET.md
 └── README.md
 ```
 
 ## Status
 
-- **Testnet:** deployed — see `contracts/deployments/testnet.json`
-- **Mainnet:** script ready — see `DEPLOY_MAINNET.md` / `contracts/deployments/mainnet.json`
-- **Web:** `NEXT_PUBLIC_NETWORK=testnet|mainnet`
+- **Testnet & Mainnet** contracts — see `contracts/deployments/`
+- **Web** — `NEXT_PUBLIC_NETWORK=testnet|mainnet`
 
 ## Quick start (web)
 
 ```bash
 cd web
-cp .env.example .env.local   # optional; default is testnet
+cp .env.example .env.local
 npm install
 npm run dev
 ```
@@ -40,10 +38,11 @@ npm run dev
 
 ```bash
 cd contracts
-cp .env.example .env         # fill PRIVATE_KEY, TREASURY_ADDRESS locally
+cp .env.example .env
 npm install
 npx hardhat test
-npm run deploy:testnet       # or: npm run deploy:mainnet
+npm run deploy:testnet
+# or: npm run deploy:mainnet
 ```
 
-Never commit `.env` or paste private keys into chat.
+Never commit `.env` or share private keys.

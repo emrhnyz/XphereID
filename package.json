@@ -1,6 +1,6 @@
 {
   "name": "xphereid",
   "private": true,
-  "description": "XphereID — .xp name service on Xphere (grant demo monorepo)",
+  "description": "XphereID — .xp name service on Xphere",
   "version": "0.0.0"
 }

@@ -11,7 +11,7 @@
  * Usage (from /contracts, after filling .env — do not paste keys in chat):
  *   npx hardhat run scripts/deploy-mainnet.js --network xphereMainnet
  *
- * Keep REGISTER_PRICE_WEI low for the grant demo (default 0.01 XP).
+ * Keep REGISTER_PRICE_WEI low for the product demo (default 0.01 XP).
  */
 
 const fs = require("fs");
@@ -33,7 +33,7 @@ async function main() {
     );
   }
 
-  // Low grant-demo fee on mainnet too — override with REGISTER_PRICE_WEI if needed.
+  // Low registration fee on mainnet too — override with REGISTER_PRICE_WEI if needed.
   const price = process.env.REGISTER_PRICE_WEI
     ? BigInt(process.env.REGISTER_PRICE_WEI)
     : ethers.parseEther("0.01");
@@ -118,7 +118,7 @@ async function main() {
       setXpOwner: receipt.hash,
     },
     deployedAt: new Date().toISOString(),
-    feeNote: "Intentionally low registration fee for grant demo / public good.",
+    feeNote: "Intentionally low registration fee for product demo / public good.",
   };
 
   const outDir = path.join(__dirname, "..", "deployments");

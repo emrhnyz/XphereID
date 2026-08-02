@@ -33,7 +33,7 @@ async function main() {
     );
   }
 
-  // Low grant-demo fee; override with REGISTER_PRICE_WEI if needed.
+  // Low registration fee; override with REGISTER_PRICE_WEI if needed.
   const price = process.env.REGISTER_PRICE_WEI
     ? BigInt(process.env.REGISTER_PRICE_WEI)
     : ethers.parseEther("0.01");
