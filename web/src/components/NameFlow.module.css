@@ -1,0 +1,140 @@
+.section {
+  display: grid;
+  gap: 1.75rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.block {
+  display: grid;
+  gap: 0.65rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.heading {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.15rem 0.75rem 0.15rem 0.15rem;
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 1.05rem;
+  padding: 0.7rem 0.65rem;
+  outline: none;
+}
+
+.suffix {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.status {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.ok {
+  color: var(--accent);
+}
+
+.taken {
+  color: var(--warn);
+}
+
+.primary,
+.secondary {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid transparent;
+  width: fit-content;
+}
+
+.primary {
+  background: var(--accent);
+  color: #061018;
+  font-weight: 600;
+}
+
+.primary:hover:not(:disabled) {
+  background: var(--accent-strong);
+}
+
+.primary:disabled,
+.secondary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.secondary {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.secondary:hover:not(:disabled) {
+  border-color: var(--muted);
+}
+
+.resolveForm {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.resolveResult {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text);
+  word-break: break-all;
+  font-variant-numeric: tabular-nums;
+}
+
+.error {
+  margin: 0;
+  color: var(--danger);
+  font-size: 0.9rem;
+}
+
+.success {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.tx {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.tx a {
+  color: var(--accent);
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@xphereid/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "description": "XphereID — ENS-based .xp name service contracts (Hardhat)",
+  "scripts": {
+    "compile": "hardhat compile",
+    "clean": "hardhat clean",
+    "test": "hardhat test",
+    "deploy:testnet": "hardhat run scripts/deploy-testnet.js --network xphereTestnet"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
+    "chai": "^4.5.0",
+    "dotenv": "^17.4.2",
+    "ethers": "^6.13.5",
+    "hardhat": "^2.28.0"
+  },
+  "dependencies": {
+    "@ensdomains/ens-contracts": "^1.7.0",
+    "@openzeppelin/contracts": "^4.9.6"
+  }
+}
